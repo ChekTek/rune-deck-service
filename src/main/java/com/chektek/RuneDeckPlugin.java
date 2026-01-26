@@ -29,6 +29,7 @@ import net.runelite.client.plugins.PluginDescriptor;
 public class RuneDeckPlugin extends Plugin {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RuneDeckConfig.class);
+	private static final int[] PORTS_TO_TRY = {42023, 80702, 54320};
 	private PayloadCache payloadCache = PayloadCache.getInstance();
 
 	@Inject
@@ -38,8 +39,21 @@ public class RuneDeckPlugin extends Plugin {
 
 	@Override
 	protected void startUp() throws Exception {
-		this.runeDeckSocketServer = new RuneDeckSocketServer(42069); // TODO: add a try catch with an array of ports
-		this.runeDeckSocketServer.start();
+		Exception lastException = null;
+		
+		for (int port : PORTS_TO_TRY) {
+			try {
+				this.runeDeckSocketServer = new RuneDeckSocketServer(port);
+				this.runeDeckSocketServer.start();
+				LOGGER.info("RuneDeckSocketServer successfully started on port: " + port);
+				return;
+			} catch (Exception e) {
+				LOGGER.warn("Failed to start server on port " + port + ": " + e.getMessage());
+				lastException = e;
+			}
+		}
+		
+		throw new Exception("Failed to start RuneDeckSocketServer on any port", lastException);
 	}
 
 	@Override
@@ -67,12 +81,12 @@ public class RuneDeckPlugin extends Plugin {
 
 		if (payloadCache.movementPayload.isNewPayload(this.client)) {
 			payloadCache.movementPayload = new MovementPayload(this.client);
-			this.runeDeckSocketServer.broadcast(payloadCache.skillsPayload);
+			this.runeDeckSocketServer.broadcast(payloadCache.movementPayload);
 		}
 
 		if (payloadCache.overheadPayload.isNewPayload(this.client)) {
 			payloadCache.overheadPayload = new OverheadPayload(this.client);
-			this.runeDeckSocketServer.broadcast(payloadCache.skillsPayload);
+			this.runeDeckSocketServer.broadcast(payloadCache.overheadPayload);
 		}
 
 		if (payloadCache.skillsPayload.isNewPayload(this.client)) {

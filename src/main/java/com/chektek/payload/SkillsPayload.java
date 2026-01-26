@@ -53,6 +53,8 @@ public class SkillsPayload extends Payload {
     private int currentFarming;
     private int totalFarming;
     private int combatLevel;
+	private int currentSailing;
+	private int totalSailing;
     
     public SkillsPayload() {
         super(PayloadType.SKILLS);
@@ -107,6 +109,8 @@ public class SkillsPayload extends Payload {
         this.totalWoodcutting = client.getRealSkillLevel(Skill.WOODCUTTING);
         this.currentFarming = client.getBoostedSkillLevel(Skill.FARMING);
         this.totalFarming = client.getRealSkillLevel(Skill.FARMING);
+		this.currentSailing = client.getBoostedSkillLevel(Skill.SAILING);
+		this.totalSailing = client.getRealSkillLevel(Skill.SAILING);
 
         this.combatLevel = client.getLocalPlayer().getCombatLevel();
     }
@@ -295,6 +299,14 @@ public class SkillsPayload extends Payload {
         return this.totalFarming;
     }
 
+	public int getCurrentSailing() {
+		return this.currentSailing;
+	}
+
+	public int getTotalSailing() {
+		return this.totalSailing;
+	}
+
     public int getCombatLevel() {
         return this.combatLevel;
     }
@@ -304,12 +316,12 @@ public class SkillsPayload extends Payload {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SkillsPayload that = (SkillsPayload) o;
-        return currentHealth == that.currentHealth && totalHealth == that.totalHealth && currentAttack == that.currentAttack && totalAttack == that.totalAttack && currentStrength == that.currentStrength && totalStrength == that.totalStrength && currentDefence == that.currentDefence && totalDefence == that.totalDefence && currentRange == that.currentRange && totalRange == that.totalRange && currentPrayer == that.currentPrayer && totalPrayer == that.totalPrayer && currentMagic == that.currentMagic && totalMagic == that.totalMagic && currentRunecrafting == that.currentRunecrafting && totalRunecrafting == that.totalRunecrafting && currentConstruction == that.currentConstruction && totalConstruction == that.totalConstruction && currentAgility == that.currentAgility && totalAgility == that.totalAgility && currentHerblore == that.currentHerblore && totalHerblore == that.totalHerblore && currentThieving == that.currentThieving && totalThieving == that.totalThieving && currentCrafting == that.currentCrafting && totalCrafting == that.totalCrafting && currentFletching == that.currentFletching && totalFletching == that.totalFletching && currentSlayer == that.currentSlayer && totalSlayer == that.totalSlayer && currentHunter == that.currentHunter && totalHunter == that.totalHunter && currentMining == that.currentMining && totalMining == that.totalMining && currentSmithing == that.currentSmithing && totalSmithing == that.totalSmithing && currentFishing == that.currentFishing && totalFishing == that.totalFishing && currentCooking == that.currentCooking && totalCooking == that.totalCooking && currentFiremaking == that.currentFiremaking && totalFiremaking == that.totalFiremaking && currentWoodcutting == that.currentWoodcutting && totalWoodcutting == that.totalWoodcutting && currentFarming == that.currentFarming && totalFarming == that.totalFarming && combatLevel == that.combatLevel;
+        return currentHealth == that.currentHealth && totalHealth == that.totalHealth && currentAttack == that.currentAttack && totalAttack == that.totalAttack && currentStrength == that.currentStrength && totalStrength == that.totalStrength && currentDefence == that.currentDefence && totalDefence == that.totalDefence && currentRange == that.currentRange && totalRange == that.totalRange && currentPrayer == that.currentPrayer && totalPrayer == that.totalPrayer && currentMagic == that.currentMagic && totalMagic == that.totalMagic && currentRunecrafting == that.currentRunecrafting && totalRunecrafting == that.totalRunecrafting && currentConstruction == that.currentConstruction && totalConstruction == that.totalConstruction && currentAgility == that.currentAgility && totalAgility == that.totalAgility && currentHerblore == that.currentHerblore && totalHerblore == that.totalHerblore && currentThieving == that.currentThieving && totalThieving == that.totalThieving && currentCrafting == that.currentCrafting && totalCrafting == that.totalCrafting && currentFletching == that.currentFletching && totalFletching == that.totalFletching && currentSlayer == that.currentSlayer && totalSlayer == that.totalSlayer && currentHunter == that.currentHunter && totalHunter == that.totalHunter && currentMining == that.currentMining && totalMining == that.totalMining && currentSmithing == that.currentSmithing && totalSmithing == that.totalSmithing && currentFishing == that.currentFishing && totalFishing == that.totalFishing && currentCooking == that.currentCooking && totalCooking == that.totalCooking && currentFiremaking == that.currentFiremaking && totalFiremaking == that.totalFiremaking && currentWoodcutting == that.currentWoodcutting && totalWoodcutting == that.totalWoodcutting && currentFarming == that.currentFarming && totalFarming == that.totalFarming && combatLevel == that.combatLevel && currentSailing == that.currentSailing && totalSailing == that.totalSailing;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(currentHealth, totalHealth, currentAttack, totalAttack, currentStrength, totalStrength, currentDefence, totalDefence, currentRange, totalRange, currentPrayer, totalPrayer, currentMagic, totalMagic, currentRunecrafting, totalRunecrafting, currentConstruction, totalConstruction, currentAgility, totalAgility, currentHerblore, totalHerblore, currentThieving, totalThieving, currentCrafting, totalCrafting, currentFletching, totalFletching, currentSlayer, totalSlayer, currentHunter, totalHunter, currentMining, totalMining, currentSmithing, totalSmithing, currentFishing, totalFishing, currentCooking, totalCooking, currentFiremaking, totalFiremaking, currentWoodcutting, totalWoodcutting, currentFarming, totalFarming, combatLevel);
+        return Objects.hash(currentHealth, totalHealth, currentAttack, totalAttack, currentStrength, totalStrength, currentDefence, totalDefence, currentRange, totalRange, currentPrayer, totalPrayer, currentMagic, totalMagic, currentRunecrafting, totalRunecrafting, currentConstruction, totalConstruction, currentAgility, totalAgility, currentHerblore, totalHerblore, currentThieving, totalThieving, currentCrafting, totalCrafting, currentFletching, totalFletching, currentSlayer, totalSlayer, currentHunter, totalHunter, currentMining, totalMining, currentSmithing, totalSmithing, currentFishing, totalFishing, currentCooking, totalCooking, currentFiremaking, totalFiremaking, currentWoodcutting, totalWoodcutting, currentFarming, totalFarming, combatLevel, currentSailing, totalSailing);
     }
 
     @Override
@@ -341,6 +353,27 @@ public class SkillsPayload extends Payload {
                 this.currentCrafting != client.getBoostedSkillLevel(Skill.CRAFTING) ||
                 this.totalCrafting != client.getRealSkillLevel(Skill.CRAFTING) ||
                 this.currentFletching != client.getBoostedSkillLevel(Skill.FLETCHING) ||
+				this.totalFletching != client.getRealSkillLevel(Skill.FLETCHING) ||
+				this.currentSlayer != client.getBoostedSkillLevel(Skill.SLAYER) ||
+				this.totalSlayer != client.getRealSkillLevel(Skill.SLAYER) ||
+				this.currentHunter != client.getBoostedSkillLevel(Skill.HUNTER) ||
+				this.totalHunter != client.getRealSkillLevel(Skill.HUNTER) ||
+				this.currentMining != client.getBoostedSkillLevel(Skill.MINING) ||
+				this.totalMining != client.getRealSkillLevel(Skill.MINING) ||
+				this.currentSmithing != client.getBoostedSkillLevel(Skill.SMITHING) ||
+				this.totalSmithing != client.getRealSkillLevel(Skill.SMITHING) ||
+				this.currentFishing != client.getBoostedSkillLevel(Skill.FISHING) ||
+				this.totalFishing != client.getRealSkillLevel(Skill.FISHING) ||
+				this.currentCooking != client.getBoostedSkillLevel(Skill.COOKING) ||
+				this.totalCooking != client.getRealSkillLevel(Skill.COOKING) ||
+				this.currentFiremaking != client.getBoostedSkillLevel(Skill.FIREMAKING) ||
+				this.totalFiremaking != client.getRealSkillLevel(Skill.FIREMAKING) ||
+				this.currentWoodcutting != client.getBoostedSkillLevel(Skill.WOODCUTTING) ||
+				this.totalWoodcutting != client.getRealSkillLevel(Skill.WOODCUTTING) ||
+				this.currentFarming != client.getBoostedSkillLevel(Skill.FARMING) ||
+				this.totalFarming != client.getRealSkillLevel(Skill.FARMING) ||
+				this.currentSailing != client.getBoostedSkillLevel(Skill.SAILING) ||
+				this.totalSailing != client.getRealSkillLevel(Skill.SAILING) ||
                 this.combatLevel != client.getLocalPlayer().getCombatLevel();
     }
 }
