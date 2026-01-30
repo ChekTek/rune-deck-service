@@ -1,5 +1,7 @@
 package com.chektek.payload;
 
+import com.chektek.AnimationCollections;
+
 import net.runelite.api.Client;
 import net.runelite.api.Player;
 
@@ -23,16 +25,34 @@ public class ActivityPayload extends Payload {
 	}
 
 	private static boolean isCurrentlyActive(Client client) {
-		// Player is NOT idle if any of these are true:
-		// 1. getAnimation() != -1: Player is performing an action (skilling, combat
-		// animation, etc.)
-		// 2. isInteracting(): Player is targeting/interacting with another actor
-		// 3. getPoseAnimation() != getIdlePoseAnimation(): Player is walking/running
-		// (not in idle pose)
 		Player player = client.getLocalPlayer();
-		return player.getAnimation() != -1
-				|| player.isInteracting()
-				|| player.getPoseAnimation() != player.getIdlePoseAnimation();
+		if (player == null) {
+			return false; // Safety check
+		}
+
+		int animation = player.getAnimation();
+		boolean isFishing = AnimationCollections.isFishingAnimation(animation);
+
+		// Player is performing a non-idle animation
+		if (animation != -1) {
+			// For fishing, only count as active if still targeting the fishing spot
+			if (isFishing) {
+				return player.getInteracting() != null;
+			}
+			return true; // Any other animation = active
+		}
+
+		// Player is targeting/interacting with another actor
+		if (player.isInteracting()) {
+			return true;
+		}
+
+		// Player is moving (walking/running)
+		if (player.getPoseAnimation() != player.getIdlePoseAnimation()) {
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override
