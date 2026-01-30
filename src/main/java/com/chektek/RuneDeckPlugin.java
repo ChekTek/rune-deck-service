@@ -1,6 +1,5 @@
 package com.chektek;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 
@@ -50,7 +49,7 @@ public class RuneDeckPlugin extends Plugin {
 			serverSocket.setReuseAddress(true);
 			serverSocket.bind(new InetSocketAddress("127.0.0.1", port));
 			return true;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			return false;
 		}
 	}
