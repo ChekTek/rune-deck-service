@@ -18,6 +18,7 @@ import com.chektek.payload.MovementPayload;
 import com.chektek.payload.OverheadPayload;
 import com.chektek.payload.PVPPayload;
 import com.chektek.payload.SkillsPayload;
+import com.google.gson.Gson;
 import com.google.inject.Provides;
 
 import net.runelite.api.Client;
@@ -38,6 +39,9 @@ public class RuneDeckPlugin extends Plugin {
 
 	@Inject
 	private Client client;
+
+	@Inject
+	private Gson gson;
 
 	private RuneDeckSocketServer runeDeckSocketServer;
 
@@ -62,7 +66,7 @@ public class RuneDeckPlugin extends Plugin {
 			}
 
 			try {
-				this.runeDeckSocketServer = new RuneDeckSocketServer(port);
+				this.runeDeckSocketServer = new RuneDeckSocketServer(port, gson);
 				this.runeDeckSocketServer.start();
 				LOGGER.info("RuneDeckSocketServer starting on port: " + port);
 				return;

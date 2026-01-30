@@ -16,15 +16,16 @@ public class RuneDeckSocketServer extends WebSocketServer {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RuneDeckSocketServer.class);
 
-	private final Gson GSON = new Gson();
+	private final Gson gson;
 	private PayloadCache payloadCache = PayloadCache.getInstance();
 
-	public RuneDeckSocketServer(int port) throws UnknownHostException {
+	public RuneDeckSocketServer(int port, Gson gson) throws UnknownHostException {
 		super(new InetSocketAddress(port));
+		this.gson = gson;
 	}
 
 	public void broadcast(Payload payload) {
-		String payloadJSON = this.GSON.toJson(payload);
+		String payloadJSON = this.gson.toJson(payload);
 		super.broadcast(payloadJSON);
 	}
 
@@ -44,7 +45,7 @@ public class RuneDeckSocketServer extends WebSocketServer {
 	public void onMessage(WebSocket conn, String messageString) {
 
 		try {
-			Message message = this.GSON.fromJson(messageString, Message.class);
+			Message message = this.gson.fromJson(messageString, Message.class);
 
 			if (message.messageType.equals("clearCache")) {
 				payloadCache.clearCache();
