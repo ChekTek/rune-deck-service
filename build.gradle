@@ -17,7 +17,6 @@ def runeLiteVersion = 'latest.release'
 def pluginMainClass = 'com.chektek.RuneDeckPluginTest'
 
 dependencies {
-    implementation 'org.java-websocket:Java-WebSocket:1.5.6'
 	compileOnly group: 'net.runelite', name:'client', version: runeLiteVersion
 
 	compileOnly 'org.projectlombok:lombok:1.18.30'
