@@ -30,7 +30,7 @@ public class RuneDeckSocketServer extends WebSocketServer {
 
 	@Override
 	public void onOpen(WebSocket conn, ClientHandshake handshake) {
-		LOGGER.info(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " connected!");
+		LOGGER.info("Client connected: " + conn.getRemoteSocketAddress());
 		payloadCache.clearCache();
 	}
 
@@ -69,8 +69,8 @@ public class RuneDeckSocketServer extends WebSocketServer {
 	@Override
 	public void onStart() {
 		payloadCache.clearCache();
-		LOGGER.info("RuneDeckSocketServer started on port: " + this.getPort());
 		this.setConnectionLostTimeout(60);
+		LOGGER.info("RuneDeckSocketServer started on port: " + this.getPort());
 	}
 
 }

@@ -1,5 +1,9 @@
 package com.chektek;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -29,7 +33,7 @@ import net.runelite.client.plugins.PluginDescriptor;
 public class RuneDeckPlugin extends Plugin {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RuneDeckConfig.class);
-	private static final int[] PORTS_TO_TRY = {42023, 80702, 54320};
+	private static final int[] PORTS_TO_TRY = {42023, 43060, 43020};
 	private PayloadCache payloadCache = PayloadCache.getInstance();
 
 	@Inject
@@ -37,28 +41,47 @@ public class RuneDeckPlugin extends Plugin {
 
 	private RuneDeckSocketServer runeDeckSocketServer;
 
+	static boolean isPortAvailable(int port) {
+		try (ServerSocket serverSocket = new ServerSocket()) {
+			serverSocket.setReuseAddress(true);
+			serverSocket.bind(new InetSocketAddress("127.0.0.1", port));
+			return true;
+		} catch (IOException e) {
+			return false;
+		}
+	}
+
 	@Override
 	protected void startUp() throws Exception {
 		Exception lastException = null;
-		
+
 		for (int port : PORTS_TO_TRY) {
+			if (!isPortAvailable(port)) {
+				LOGGER.info("Port " + port + " is already in use; trying next");
+				continue;
+			}
+
 			try {
 				this.runeDeckSocketServer = new RuneDeckSocketServer(port);
 				this.runeDeckSocketServer.start();
-				LOGGER.info("RuneDeckSocketServer successfully started on port: " + port);
+				LOGGER.info("RuneDeckSocketServer starting on port: " + port);
 				return;
 			} catch (Exception e) {
 				LOGGER.warn("Failed to start server on port " + port + ": " + e.getMessage());
 				lastException = e;
+				this.runeDeckSocketServer = null;
 			}
 		}
-		
+
 		throw new Exception("Failed to start RuneDeckSocketServer on any port", lastException);
 	}
 
 	@Override
 	protected void shutDown() throws Exception {
-		this.runeDeckSocketServer.stop();
+		if (this.runeDeckSocketServer != null) {
+			this.runeDeckSocketServer.stop();
+			this.runeDeckSocketServer = null;
+		}
 	}
 
 	@Subscribe
