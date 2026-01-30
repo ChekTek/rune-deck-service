@@ -29,7 +29,7 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 
-@PluginDescriptor(name = "Rune Deck")
+@PluginDescriptor(name = "Rune Deck", description = "A data connector for the Rune Deck.", enabledByDefault = true)
 public class RuneDeckPlugin extends Plugin {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RuneDeckConfig.class);
