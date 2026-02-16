@@ -24,23 +24,23 @@ public class PluginControlService {
 		this.pluginManager = pluginManager;
 	}
 
-	public List<RuneDeckSocketServer.PluginSummary> getPluginSummaries() {
+	public List<PluginSummary> getPluginSummaries() {
 		return pluginManager.getPlugins().stream()
-				.map(plugin -> new RuneDeckSocketServer.PluginSummary(
+				.map(plugin -> new PluginSummary(
 						getPluginId(plugin),
 						getPluginName(plugin),
 						pluginManager.isPluginActive(plugin)))
-				.sorted(Comparator.comparing(RuneDeckSocketServer.PluginSummary::getName,
+				.sorted(Comparator.comparing(PluginSummary::getName,
 						String.CASE_INSENSITIVE_ORDER))
 				.collect(Collectors.toList());
 	}
 
-	public RuneDeckSocketServer.PluginSummary getPluginSummary(Plugin plugin, boolean isActive) {
+	public PluginSummary getPluginSummary(Plugin plugin, boolean isActive) {
 		if (plugin == null) {
 			return null;
 		}
 
-		return new RuneDeckSocketServer.PluginSummary(
+		return new PluginSummary(
 				getPluginId(plugin),
 				getPluginName(plugin),
 				isActive);
