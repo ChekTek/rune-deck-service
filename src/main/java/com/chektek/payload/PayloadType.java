@@ -11,5 +11,7 @@ public enum PayloadType {
     OVERHEAD,
     PVP,
     SKILLS,
-    WORLDS
+    WORLDS,
+	PLUGINS,
+	PLUGIN_CHANGED
 }

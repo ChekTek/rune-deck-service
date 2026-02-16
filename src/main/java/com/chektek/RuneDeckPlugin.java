@@ -26,6 +26,7 @@ import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.PluginChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 
@@ -33,7 +34,7 @@ import net.runelite.client.plugins.PluginDescriptor;
 public class RuneDeckPlugin extends Plugin {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RuneDeckConfig.class);
-	private static final int[] PORTS_TO_TRY = {42023, 43060, 43020};
+	private static final int[] PORTS_TO_TRY = { 42023, 43060, 43020 };
 	private PayloadCache payloadCache = PayloadCache.getInstance();
 
 	@Inject
@@ -41,6 +42,9 @@ public class RuneDeckPlugin extends Plugin {
 
 	@Inject
 	private Gson gson;
+
+	@Inject
+	private PluginControlService pluginControlService;
 
 	private RuneDeckSocketServer runeDeckSocketServer;
 
@@ -65,7 +69,7 @@ public class RuneDeckPlugin extends Plugin {
 			}
 
 			try {
-				this.runeDeckSocketServer = new RuneDeckSocketServer(port, gson);
+				this.runeDeckSocketServer = new RuneDeckSocketServer(port, gson, pluginControlService);
 				this.runeDeckSocketServer.start();
 				LOGGER.info("RuneDeckSocketServer starting on port: " + port);
 				return;
@@ -145,6 +149,15 @@ public class RuneDeckPlugin extends Plugin {
 			this.runeDeckSocketServer.broadcast(payloadCache.activityPayload);
 		}
 
+	}
+
+	@Subscribe
+	public void onPluginChanged(PluginChanged pluginChanged) {
+		if (this.runeDeckSocketServer == null) {
+			return;
+		}
+
+		this.runeDeckSocketServer.broadcastPluginChange(pluginChanged.getPlugin(), pluginChanged.isLoaded());
 	}
 
 	@Provides
