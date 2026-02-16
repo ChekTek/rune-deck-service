@@ -1,10 +1,12 @@
 package com.chektek;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+import javax.swing.SwingUtilities;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,14 +65,34 @@ public class PluginControlService {
 		}
 
 		try {
-			if (isActive) {
-				pluginManager.setPluginEnabled(plugin, true);
-				pluginManager.startPlugin(plugin);
-			} else {
-				pluginManager.stopPlugin(plugin);
-				pluginManager.setPluginEnabled(plugin, false);
+			if (isActive && !pluginManager.isPluginEnabled(plugin)) {
+				pluginManager.setPluginEnabled(plugin, isActive);
+
+				if (!pluginManager.isPluginActive(plugin)) {
+					SwingUtilities.invokeAndWait(() -> {
+						try {
+							pluginManager.startPlugin(plugin);
+						} catch (Exception ex) {
+							throw new RuntimeException(ex);
+						}
+					});
+				}
+			} else if (!isActive && pluginManager.isPluginEnabled(plugin)) {
+				pluginManager.setPluginEnabled(plugin, isActive);
+
+				if (pluginManager.isPluginActive(plugin)) {
+					SwingUtilities.invokeAndWait(() -> {
+						try {
+							pluginManager.stopPlugin(plugin);
+						} catch (Exception ex) {
+							throw new RuntimeException(ex);
+						}
+					});
+				}
 			}
-		} catch (Exception e) {
+		} catch (InvocationTargetException e) {
+			LOGGER.warn("Failed to toggle plugin {} to isActive={}", pluginId, isActive, e.getCause());
+		} catch (Throwable e) {
 			LOGGER.warn("Failed to toggle plugin {} to isActive={}", pluginId, isActive, e);
 		}
 	}
