@@ -52,12 +52,15 @@ public class RuneDeckSocketServer extends WebSocketServer {
 
 	@Override
 	public void onMessage(WebSocketConnection conn, String messageString) {
+		String messageType = null;
 		try {
 			Message message = this.gson.fromJson(messageString, Message.class);
 
 			if (message == null || message.messageType == null) {
 				return;
 			}
+
+			messageType = message.messageType;
 
 			if (message.messageType.equals("clearCache")) {
 				payloadCache.clearCache();
@@ -76,7 +79,7 @@ public class RuneDeckSocketServer extends WebSocketServer {
 			}
 
 		} catch (Exception e) {
-			LOGGER.warn(e.getMessage());
+			LOGGER.warn("Failed to handle websocket message. rawMessage={}, messageType={}", messageString, messageType, e);
 		}
 	}
 

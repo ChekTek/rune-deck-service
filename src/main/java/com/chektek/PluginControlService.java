@@ -71,7 +71,7 @@ public class PluginControlService {
 				pluginManager.setPluginEnabled(plugin, false);
 			}
 		} catch (Exception e) {
-			LOGGER.warn("Failed to toggle plugin {}: {}", pluginId, e.getMessage());
+			LOGGER.warn("Failed to toggle plugin {} to isActive={}", pluginId, isActive, e);
 		}
 	}
 
