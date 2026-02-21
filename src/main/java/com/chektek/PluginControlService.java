@@ -1,6 +1,5 @@
 package com.chektek;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,8 +64,10 @@ public class PluginControlService {
 		}
 
 		try {
-			if (isActive && !pluginManager.isPluginEnabled(plugin)) {
-				pluginManager.setPluginEnabled(plugin, isActive);
+			if (isActive) {
+				if (!pluginManager.isPluginEnabled(plugin)) {
+					pluginManager.setPluginEnabled(plugin, true);
+				}
 
 				if (!pluginManager.isPluginActive(plugin)) {
 					SwingUtilities.invokeLater(() -> {
@@ -77,9 +78,7 @@ public class PluginControlService {
 						}
 					});
 				}
-			} else if (!isActive && pluginManager.isPluginEnabled(plugin)) {
-				pluginManager.setPluginEnabled(plugin, isActive);
-
+			} else {
 				if (pluginManager.isPluginActive(plugin)) {
 					SwingUtilities.invokeLater(() -> {
 						try {
@@ -88,6 +87,10 @@ public class PluginControlService {
 							throw new RuntimeException(ex);
 						}
 					});
+				}
+
+				if (pluginManager.isPluginEnabled(plugin)) {
+					pluginManager.setPluginEnabled(plugin, false);
 				}
 			}
 		} catch (Throwable e) {
