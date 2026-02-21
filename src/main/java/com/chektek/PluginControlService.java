@@ -69,7 +69,7 @@ public class PluginControlService {
 				pluginManager.setPluginEnabled(plugin, isActive);
 
 				if (!pluginManager.isPluginActive(plugin)) {
-					SwingUtilities.invokeAndWait(() -> {
+					SwingUtilities.invokeLater(() -> {
 						try {
 							pluginManager.startPlugin(plugin);
 						} catch (Exception ex) {
@@ -81,7 +81,7 @@ public class PluginControlService {
 				pluginManager.setPluginEnabled(plugin, isActive);
 
 				if (pluginManager.isPluginActive(plugin)) {
-					SwingUtilities.invokeAndWait(() -> {
+					SwingUtilities.invokeLater(() -> {
 						try {
 							pluginManager.stopPlugin(plugin);
 						} catch (Exception ex) {
@@ -90,8 +90,6 @@ public class PluginControlService {
 					});
 				}
 			}
-		} catch (InvocationTargetException e) {
-			LOGGER.warn("Failed to toggle plugin {} to isActive={}", pluginId, isActive, e.getCause());
 		} catch (Throwable e) {
 			LOGGER.warn("Failed to toggle plugin {} to isActive={}", pluginId, isActive, e);
 		}
