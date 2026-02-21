@@ -1,6 +1,5 @@
 package com.chektek.payload;
 
-// Probably should be an enum
 public enum PayloadType {
 	ACTIVITY,
 	EQUIPMENT,
