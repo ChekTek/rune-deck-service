@@ -74,7 +74,7 @@ public class PluginControlService {
 						try {
 							pluginManager.startPlugin(plugin);
 						} catch (Exception ex) {
-							throw new RuntimeException(ex);
+							LOGGER.warn("Failed to start plugin: " + plugin.getName(), ex);
 						}
 					});
 				}
@@ -84,7 +84,7 @@ public class PluginControlService {
 						try {
 							pluginManager.stopPlugin(plugin);
 						} catch (Exception ex) {
-							throw new RuntimeException(ex);
+							LOGGER.warn("Failed to start plugin: " + plugin.getName(), ex);
 						}
 					});
 				}
