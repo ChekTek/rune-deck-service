@@ -58,9 +58,9 @@ public class GrandExchangePayload extends Payload {
 
 class Offer {
     private final int itemId;
-    private final int price;
+    private final long price;
     private final int quantitySold;
-    private final int spent;
+    private final long spent;
     private final int totalQuantity;
     private final String state;
 
@@ -77,7 +77,7 @@ class Offer {
         return itemId;
     }
 
-    public int getPrice() {
+    public long getPrice() {
         return price;
     }
 
@@ -85,7 +85,7 @@ class Offer {
         return quantitySold;
     }
 
-    public int getSpent() {
+    public long getSpent() {
         return spent;
     }
 
