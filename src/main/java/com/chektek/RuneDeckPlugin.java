@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.chektek.payload.ActivityPayload;
+import com.chektek.payload.CrewPayload;
 import com.chektek.payload.EquipmentPayload;
 import com.chektek.payload.FPSPayload;
 import com.chektek.payload.GrandExchangePayload;
@@ -22,8 +23,11 @@ import com.google.inject.Provides;
 
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
+import net.runelite.api.Skill;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
+import net.runelite.api.events.OverheadTextChanged;
+import net.runelite.api.events.StatChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.PluginChanged;
@@ -47,6 +51,10 @@ public class RuneDeckPlugin extends Plugin {
 	private PluginControlService pluginControlService;
 
 	private RuneDeckSocketServer runeDeckSocketServer;
+
+	// Last seen Sailing XP, used by CrewTracker as evidence for the
+	// ghost crewmate (see onStatChanged).
+	private int lastSailingXp = -1;
 
 	static boolean isPortAvailable(int port) {
 		try (ServerSocket serverSocket = new ServerSocket()) {
@@ -102,6 +110,8 @@ public class RuneDeckPlugin extends Plugin {
 		if (userLoggedIn || gameIsLoading)
 			return;
 
+		CrewTracker.getInstance().reset();
+		lastSailingXp = -1;
 		this.runeDeckSocketServer.broadcast(new LogoutPayload());
 		payloadCache.clearCache();
 	}
@@ -149,6 +159,33 @@ public class RuneDeckPlugin extends Plugin {
 			this.runeDeckSocketServer.broadcast(payloadCache.activityPayload);
 		}
 
+		if (payloadCache.crewPayload.isNewPayload(this.client)) {
+			payloadCache.crewPayload = new CrewPayload(this.client);
+			this.runeDeckSocketServer.broadcast(payloadCache.crewPayload);
+		}
+
+	}
+
+	@Subscribe
+	public void onOverheadTextChanged(OverheadTextChanged overheadTextChanged) {
+		// A crewmate announcing a catch is the evidence CrewTracker
+		// uses to call a hook WORKING.
+		CrewTracker.getInstance().onOverheadText(this.client, overheadTextChanged.getActor(),
+				overheadTextChanged.getOverheadText());
+	}
+
+	@Subscribe
+	public void onStatChanged(StatChanged statChanged) {
+		if (statChanged.getSkill() != Skill.SAILING) {
+			return;
+		}
+
+		if (lastSailingXp >= 0 && statChanged.getXp() > lastSailingXp) {
+			CrewTracker.getInstance().noteSailingXp(this.client.getTickCount());
+		}
+		if (statChanged.getXp() >= 0) {
+			lastSailingXp = statChanged.getXp();
+		}
 	}
 
 	@Subscribe
