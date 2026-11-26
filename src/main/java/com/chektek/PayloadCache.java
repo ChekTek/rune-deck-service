@@ -11,6 +11,7 @@ public class PayloadCache {
 	private static PayloadCache instance = new PayloadCache();
 
 	public ActivityPayload activityPayload = new ActivityPayload();
+	public CrewPayload crewPayload = new CrewPayload();
 	public FPSPayload fpsPayload = new FPSPayload();
 	public EquipmentPayload equipmentPayload = new EquipmentPayload();
 	public GrandExchangePayload grandExchangePayload = new GrandExchangePayload();
@@ -25,6 +26,7 @@ public class PayloadCache {
 
 	public void clearCache() {
 		activityPayload = new ActivityPayload();
+		crewPayload = new CrewPayload();
 		fpsPayload = new FPSPayload();
 		equipmentPayload = new EquipmentPayload();
 		grandExchangePayload = new GrandExchangePayload();

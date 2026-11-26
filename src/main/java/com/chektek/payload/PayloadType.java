@@ -2,6 +2,7 @@ package com.chektek.payload;
 
 public enum PayloadType {
 	ACTIVITY,
+	CREW,
 	EQUIPMENT,
 	FPS,
 	GRAND_EXCHANGE,
